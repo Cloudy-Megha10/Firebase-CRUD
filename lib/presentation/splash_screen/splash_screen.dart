@@ -20,15 +20,12 @@ class SplashScreen extends GetWidget<SplashController> {
       width: double.maxFinite,
       child: Column(mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        ClipOval(child:
         CustomImageView(
           imagePath:ImageConstant.logo,
           height: getSize(200),
           width: getSize(200)
-        ),
-        Text("lbl_samraat_international".tr,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
-        style: AppStyle.txtAllerBold28,)
+        ),)
       ],),
     ),));
   }
