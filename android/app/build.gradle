@@ -1,8 +1,7 @@
 plugins{
     id 'com.android.application'
     id 'kotlin-android'
-     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services'
 }
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -30,7 +29,7 @@ if (flutterVersionName == null) {
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace = "com.example.demo_app"
+    namespace = "com.demoproject.app"
     compileSdkVersion 34
 
     sourceSets {
@@ -43,7 +42,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.demo_app"
+        applicationId "com.demoproject.app"
         minSdkVersion 23
         targetSdkVersion 33 
         multiDexEnabled true
