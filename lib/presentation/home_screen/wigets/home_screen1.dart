@@ -28,9 +28,18 @@ class DashboardPage extends StatelessWidget {
   itemCount: controller.users.length,  // Use the length of users to avoid out-of-bounds errors
   itemBuilder: (context, index) {
     final userData = controller.users[index];  // Access user data
+    print("userdata ${userData['Image']}");
+    Uint8List imageBytes;
+
+    try {
+      imageBytes = base64Decode("${userData['Image']}");
+    } catch (e) {
+      // Handle the error if the base64 string is invalid
+      return Center(child: Text('Invalid base64 string'));
+    }
     
     // Ensure that userImageFiles and users have matching lengths
-    File? imageFile = (index < controller.userImageFiles.length)
+    controller.imageFile.value = (index < controller.userImageFiles.length)
         ? controller.userImageFiles[index]
         : null;  // Check if index exists in the userImageFiles list
 
@@ -49,20 +58,56 @@ class DashboardPage extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipOval(
-                    child: (imageFile != null && imageFile.existsSync())
-                        ? Image.file(
-                            imageFile,
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              print("Error loading image: $error");
-                              return const Text('Failed to load image');
-                            },
-                          )
-                        : const Text('No image found or image failed to load'),
-                  ),
+    //                  if (controller.imageFile.value?.path != null && controller.imageFile.value!.path.contains('assets/'))
+    //   ClipOval(
+    //     child: Image.asset(
+    //       controller.imageFile.value!.path, // Load the image as an asset
+    //       height: getSize(200),
+    //       width: getSize(200),
+    //       fit: BoxFit.cover, // Use BoxFit.cover to fill the oval without cutting off
+    //     ),
+    //   ),
+
+    // SizedBox(height: 20), // Add spacing between images
+
+    // // Display file image if userData['Image'] is a valid file path
+    // if (controller.imageFile.value?.path != null 
+    // //&& !controller.imageFile.value!.path.contains('assets/') 
+    // && controller.imageFile.value!.existsSync())
+    //   ClipOval(
+    //     child: CustomImageView(
+    //       file: File(controller.imageFile.value!.path),
+    //       height: getSize(200),
+    //       width: getSize(200),
+    //     ),),
+   // Obx(() => 
+    ClipOval(
+  child: 
+  // controller.imageFile.value != null && controller.imageFile.value!.existsSync()
+  //   ? 
+    Image.memory(imageBytes,
+        height: getSize(150),
+        width: getSize(150),
+        fit: BoxFit.cover,
+      )
+    // : const Text('No image found or image failed to load'),
+)
+//)
+,
+                  // ClipOval(
+                  //   child: (imageFile != null && imageFile.existsSync())
+                  //       ? Image.file(
+                  //           imageFile,
+                  //           height: 150,
+                  //           width: 150,
+                  //           fit: BoxFit.cover,
+                  //           errorBuilder: (context, error, stackTrace) {
+                  //             print("Error loading image: $error");
+                  //             return const Text('Failed to load image');
+                  //           },
+                  //         )
+                  //       : const Text('No image found or image failed to load'),
+                  // ),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
