@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo_app/data/apiClient/common_response.dart';
 import 'package:demo_app/firebase_database/database_methods.dart';
@@ -29,10 +28,7 @@ class HomeController extends GetxController {
   var users = <Map<String, dynamic>>[].obs; // Assuming user data is a map
   Stream<QuerySnapshot>? userStream;
     var imageFile = Rxn<File>();
-    String base64Image = '';
-    dynamic convertedImage;
-     Uint8List bytes = Uint8List(0); // Creates an empty Uint8List
-    var imageBytes = Rxn<Uint8List>(); // Store the Base64-decoded image bytes
+      Rxn<Uint8List> imageBytes = Rxn<Uint8List>(); // Store the Base64-decoded image bytes
 
 @override
 void onReady() async{
@@ -41,37 +37,15 @@ void onReady() async{
   //listenToUserStream();
 }
 
-// Future<void> setImageFromBase64(String base64Image) async {
-//   try {
-//     List<int> imageBytes = base64Decode(base64Image);
-//     final directory = await getTemporaryDirectory();
-
-//     // Create a unique file name for the image
-//     final fileName = '${DateTime.now().millisecondsSinceEpoch}_image.jpg';
-//     final file = File('${directory.path}/$fileName');
-
-//     // Optional: Remove old image file if it exists
-//     if (await file.exists()) {
-//       await file.delete();
-//     }
-
-//     // Write the new image bytes to the file
-//     await file.writeAsBytes(imageBytes);
-
-//     // Update the controller's imageFile
-//     imageFile.value = file; // This should trigger an update in the UI
-
-//     print("Image successfully decoded and saved to file: ${file.path}");
-//     print("Decoded image bytes length: ${imageBytes.length}"); // Debugging statement
-//   } catch (e) {
-//     print("Error while setting image from base64: $e");
-//     Fluttertoast.showToast(
-//       msg: "Error loading image",
-//       backgroundColor: Colors.red,
-//     );
-//   }
-// }
-
+ void decodeBase64Image(String base64String) {
+  print("decode");
+    try {
+      imageBytes.value = base64Decode(base64String);
+    } catch (e) {
+      print("Error decoding base64 image: $e");
+      imageBytes.value = null; // Clear on error if necessary
+    }
+  }
 
 
 Future<void> addNewUser({
@@ -233,6 +207,7 @@ Future<void> updateNewUser({
 
 
 Future<void> fetchUsers() async {
+  print("refrsshig");
   try {
     // Fetch the user data stream from Firebase
     userStream = await DatabaseMethods().getUserData();
@@ -243,31 +218,11 @@ Future<void> fetchUsers() async {
     // Listen to the userStream and update the observable list
     userStream!.listen((QuerySnapshot snapshot) async {
       users.value = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-
-      for (var user in users.value) {
-        if (user.containsKey('Image') && user['Image'].isNotEmpty) {
-          String base64String = user['Image'].split(',').last;
-
-          try {
-            // Decode the base64 string into bytes
-            Uint8List bytes = base64Decode(base64String);
-
-            // Optionally save the image as a file for display using Image.file()
-            final tempDir = await getTemporaryDirectory();
-            final tempFile = File('${tempDir.path}/${user['userId']}_image.png');
-            await tempFile.writeAsBytes(bytes);
-
-            // Add the decoded image file to the observable list
-            userImageFiles.add(tempFile);
-            print('Decoded image file for user: ${user['userId']}');
-          } catch (e) {
-            print('Error decoding image for user ${user['userId']}: $e');
-          }
-        } else {
-          // If no image is available, add a placeholder (optional)
-          userImageFiles.add(File(''));  // Add empty file or placeholder
-        }
-      }
+     for (var user in users.value) {
+  print('Id: ${user['Id']}');
+  //print('Image: ${user['Image']}');
+  print('-------------------------'); // Separator for clarity
+}
     });
   } catch (e) {
     print("Error fetching users: $e");
