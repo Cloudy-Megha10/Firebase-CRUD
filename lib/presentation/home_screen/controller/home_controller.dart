@@ -186,8 +186,7 @@ Future<void> updateNewUser({
       print("User Updated successfully: ${updatedUserResult.message}");
       // Resetting the image file to force a refresh
     clearTextFields(); // Optional: Clear the text fields if needed
-    Get.back();
-            //Navigator.pop(context);
+    Get.back(); //Navigator.pop(context);
     } else {
       Fluttertoast.showToast(
         msg: updatedUserResult.message,
