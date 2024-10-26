@@ -38,10 +38,13 @@ class DashboardPage extends StatelessWidget {
       return Center(child: Text('Invalid base64 string'));
     }
     
-    // Ensure that userImageFiles and users have matching lengths
-    controller.imageFile.value = (index < controller.userImageFiles.length)
-        ? controller.userImageFiles[index]
-        : null;  // Check if index exists in the userImageFiles list
+     // Ensure that userImageFiles and users have matching lengths
+      // Update imageFile value post-build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          (index < controller.userImageFiles.length) 
+           ? controller.imageFile.value = controller.userImageFiles[index]
+           : null;
+        });
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
