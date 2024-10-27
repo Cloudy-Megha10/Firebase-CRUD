@@ -6,6 +6,7 @@ import 'package:demo_app/core/utils/image_constant.dart';
 import 'package:demo_app/core/utils/size_utils.dart';
 import 'package:demo_app/firebase_database/database_methods.dart';
 import 'package:demo_app/presentation/home_screen/controller/home_controller.dart';
+import 'package:demo_app/presentation/home_screen/models/user_fields.dart';
 import 'package:demo_app/widgets/custom_image_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,32 +21,18 @@ class DashboardPage extends StatelessWidget {
 
   Widget allUserDataList() {
     return  Obx(() {
-    if (controller.users.isEmpty) {
+    if (controller
+                                              .userModelObj
+                                              .usersList.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
 
     return ListView.builder(
-  itemCount: controller.users.length,  // Use the length of users to avoid out-of-bounds errors
+  itemCount: controller
+                                              .userModelObj
+                                              .usersList
+                                              .length,  // Use the length of users to avoid out-of-bounds errors
   itemBuilder: (context, index) {
-    final userData = controller.users[index];  // Access user data
-    print("userdata ${userData['Image']}");
-    Uint8List imageBytes;
-
-    try {
-      imageBytes = base64Decode("${userData['Image']}");
-    } catch (e) {
-      // Handle the error if the base64 string is invalid
-      return Center(child: Text('Invalid base64 string'));
-    }
-    
-     // Ensure that userImageFiles and users have matching lengths
-      // Update imageFile value post-build
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          (index < controller.userImageFiles.length) 
-           ? controller.imageFile.value = controller.userImageFiles[index]
-           : null;
-        });
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -61,56 +48,18 @@ class DashboardPage extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-    //                  if (controller.imageFile.value?.path != null && controller.imageFile.value!.path.contains('assets/'))
-    //   ClipOval(
-    //     child: Image.asset(
-    //       controller.imageFile.value!.path, // Load the image as an asset
-    //       height: getSize(200),
-    //       width: getSize(200),
-    //       fit: BoxFit.cover, // Use BoxFit.cover to fill the oval without cutting off
-    //     ),
-    //   ),
-
-    // SizedBox(height: 20), // Add spacing between images
-
-    // // Display file image if userData['Image'] is a valid file path
-    // if (controller.imageFile.value?.path != null 
-    // //&& !controller.imageFile.value!.path.contains('assets/') 
-    // && controller.imageFile.value!.existsSync())
-    //   ClipOval(
-    //     child: CustomImageView(
-    //       file: File(controller.imageFile.value!.path),
-    //       height: getSize(200),
-    //       width: getSize(200),
-    //     ),),
-   // Obx(() => 
     ClipOval(
   child: 
-  // controller.imageFile.value != null && controller.imageFile.value!.existsSync()
-  //   ? 
-    Image.memory(imageBytes,
+    Image.memory(controller
+                                                                .userModelObj
+                                                                .usersList[
+                                                                    index]
+                                                                .images,
         height: getSize(150),
         width: getSize(150),
         fit: BoxFit.cover,
       )
-    // : const Text('No image found or image failed to load'),
-)
-//)
-,
-                  // ClipOval(
-                  //   child: (imageFile != null && imageFile.existsSync())
-                  //       ? Image.file(
-                  //           imageFile,
-                  //           height: 150,
-                  //           width: 150,
-                  //           fit: BoxFit.cover,
-                  //           errorBuilder: (context, error, stackTrace) {
-                  //             print("Error loading image: $error");
-                  //             return const Text('Failed to load image');
-                  //           },
-                  //         )
-                  //       : const Text('No image found or image failed to load'),
-                  // ),
+),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
@@ -132,7 +81,7 @@ class DashboardPage extends StatelessWidget {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: userData[field] ?? "",
+                                    text:_getFieldValue(field, controller.userModelObj.usersList[index]),
                                     style: TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.normal,
@@ -159,39 +108,44 @@ class DashboardPage extends StatelessWidget {
                           backgroundColor: Colors.purple.shade100),
                       onPressed: () async {
                         // Populate the form fields with user data
-                        controller.nameController.text = userData['Name'];
-                        controller.classController.text = userData['Class'];
-                        controller.genderController.text = userData['Gender'];
-                        controller.ageController.text = userData['Age'];
-                        controller.addressController.text = userData['Address'];
+                        controller.nameController.text = controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .name;
+                        controller.classController.text = controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .className;
+                        controller.genderController.text = controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .gender;
+                        controller.ageController.text = controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .age;
+                        controller.addressController.text = controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .address;
 
-                        print("userData['Id']: ${userData['Id']}");
-
-                        // Check if image exists and is not empty
-                        if (userData['Image'] != null && userData['Image'].isNotEmpty) {
-                          try {
-                            final base64String = userData['Image'];
-                            if (base64String.isNotEmpty) {
-                              final decodedBytes = base64Decode(base64String);
-                              final tempDir = await getTemporaryDirectory();
-                              final tempFile = File('${tempDir.path}/image_${DateTime.now().millisecondsSinceEpoch}.png');
-                              await tempFile.writeAsBytes(decodedBytes);
-
-                              // Update the imageFile observable
-                              controller.imageFile.value = tempFile;
-                              print("File created at: ${tempFile.path}");
-                            }
-                          } catch (e) {
-                            print("Error decoding base64 and creating file: $e");
-                            controller.imageFile.value = null;  // Clear in case of an error
-                          }
-                        } else {
-                          controller.imageFile.value = null;
-                          print("Image data is null or empty");
-                        }
-
+                                                                        if (controller.userModelObj.usersList[index].images != null && controller.userModelObj.usersList[index].images.isNotEmpty) {
+  controller.decodeAndSaveImage(controller.userModelObj.usersList[index].images);
+} else {
+  controller.imageFile.value = null;
+  print("Image data is null or empty");
+}
                         // Call the edit method
-                        editUserDetail(context, userData['Id']);
+                        editUserDetail(context,  controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .id);
                       },
                       child: Text(
                         'Edit',
@@ -208,7 +162,11 @@ class DashboardPage extends StatelessWidget {
                       ),
                       onPressed: () {
                         // Call the delete method
-                        deleteUserData(context, userData['Id']);
+                        deleteUserData(context, controller
+                                                                        .userModelObj
+                                                                        .usersList[
+                                                                            index]
+                                                                        .id);
                       },
                       child: Text(
                         'Delete',
@@ -505,24 +463,6 @@ Future deleteUserData(BuildContext context,String id) {
                           backgroundColor: Colors.purple.shade700),
                       onPressed: () async {
                         onTapUpdateUser(id);
-                        // print("image path while storing ${controller.imageFile.value?.path}");
-                        // Map<String, dynamic> updatedUserData = {
-                        //   "Name": controller.nameController.text,
-                        //   "Class": controller.classController.text,
-                        //   "Gender":controller.genderController.text,
-                        //   "Id": id,
-                        //   "Age": controller.ageController.text,
-                        //   "Address":controller.addressController.text,
-                        //   "Image":controller.convertedImage
-                        // };
-                        // await DatabaseMethods()
-                        //     .updateUserData(id, updatedUserData)
-                        //     .then((value) {
-                        //   Navigator.pop(context);
-                        //  Fluttertoast.showToast(msg: 
-                        //       'Data Updated Successfully', textColor:  Colors.green);
-                        // });
-                        // controller.clearTextFields();
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -553,6 +493,23 @@ child:allUserDataList(),
     )
     );
   }
+
+  String _getFieldValue(String field, UserFieldsModel user) {
+  switch (field) {
+    case 'Name':
+      return user.name ?? ""; // Assuming 'name' property exists
+    case 'Class':
+      return user.className ?? ""; // Assuming 'className' property exists
+    case 'Gender':
+      return user.gender ?? ""; // Assuming 'gender' property exists
+    case 'Age':
+      return user.age?.toString() ?? ""; // Assuming 'age' property exists and is an int
+    case 'Address':
+      return user.address ?? ""; // Assuming 'address' property exists
+    default:
+      return "";
+  }
+}
 
   onTapUpdateUser(id) async{
     print("edituserID$id");

@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo_app/data/apiClient/common_response.dart';
 import 'package:demo_app/firebase_database/database_methods.dart';
 import 'package:demo_app/presentation/home_screen/controller/home_repository.dart';
+import 'package:demo_app/presentation/home_screen/models/user_fields.dart';
+import 'package:demo_app/presentation/home_screen/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,20 +14,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HomeController extends GetxController {
-  var imageFileList = <File>[].obs;  // Observable list of image files
-  var userImageFiles = <File>[].obs;  // Observable list to hold image files
    TextEditingController nameController = TextEditingController();
   TextEditingController classController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   HomeRepository _homeRepository = HomeRepository();
-
-  RxString userName = ''.obs;
-  RxString userRole = ''.obs;
+  UserModel userModelObj = UserModel();
    var selectedIndex = 2.obs;
-    // Observable list to hold user data
-  var users = <Map<String, dynamic>>[].obs; // Assuming user data is a map
   Stream<QuerySnapshot>? userStream;
     var imageFile = Rxn<File>();
       Rxn<Uint8List> imageBytes = Rxn<Uint8List>(); // Store the Base64-decoded image bytes
@@ -34,18 +30,22 @@ class HomeController extends GetxController {
 void onReady() async{
   super.onReady();
   fetchUsers();
-  //listenToUserStream();
 }
 
- void decodeBase64Image(String base64String) {
-  print("decode");
-    try {
-      imageBytes.value = base64Decode(base64String);
-    } catch (e) {
-      print("Error decoding base64 image: $e");
-      imageBytes.value = null; // Clear on error if necessary
+ void decodeBase64Images(List<String> base64Strings) {
+  try{
+  // Decode each base64 string and concatenate into a single Uint8List
+    List<int> allBytes = [];
+    for (var base64String in base64Strings) {
+      final decodedBytes = base64Decode(base64String);
+      allBytes.addAll(decodedBytes); // Append to the list
     }
+    imageBytes.value = Uint8List.fromList(allBytes); // Convert to Uint8List
+  } catch (e) {
+    print("Error decoding base64 images: $e");
+    imageBytes.value = null; // Clear on error if necessary
   }
+ }
 
 
 Future<void> addNewUser({
@@ -106,6 +106,7 @@ Future<void> addNewUser({
         backgroundColor: Colors.green,
       );
       print("User added successfully: ${addedUserResult.message}");
+      //userModelObj.usersList.clear();
             clearTextFields();
             Get.back();
             //Navigator.pop(context);
@@ -184,7 +185,7 @@ Future<void> updateNewUser({
         backgroundColor: Colors.green,
       );
       print("User Updated successfully: ${updatedUserResult.message}");
-      // Resetting the image file to force a refresh
+    //userModelObj.usersList.clear();// Resetting the image file to force a refresh
     clearTextFields(); // Optional: Clear the text fields if needed
     Get.back(); //Navigator.pop(context);
     } else {
@@ -204,6 +205,34 @@ Future<void> updateNewUser({
   }
 }
 
+Future<void> decodeAndSaveImage(dynamic imageData) async {
+  try {
+    Uint8List decodedBytes;
+
+    // Check if imageData is a base64 string or already a Uint8List
+    if (imageData is String && imageData.isNotEmpty) {
+      decodedBytes = base64Decode(imageData);
+    } else if (imageData is Uint8List) {
+      decodedBytes = imageData;
+    } else {
+      throw Exception("Invalid image data format");
+    }
+
+    // Write to a temporary file
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/image_${DateTime.now().millisecondsSinceEpoch}.png');
+    await tempFile.writeAsBytes(decodedBytes);
+
+    // Update the observable with the file
+    imageFile.value = tempFile;
+    print("File created at: ${tempFile.path}");
+  } catch (e) {
+    print("Error decoding and saving image: $e");
+    imageFile.value = null;
+  }
+}
+
+
 
 Future<void> fetchUsers() async {
   print("refrsshig");
@@ -212,17 +241,30 @@ Future<void> fetchUsers() async {
     userStream = await DatabaseMethods().getUserData();
 
     // Clear the previous list of image files before populating new ones
-    userImageFiles.clear();
-
+    userModelObj.usersList.clear();
     // Listen to the userStream and update the observable list
-    userStream!.listen((QuerySnapshot snapshot) async {
-      users.value = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-     for (var user in users.value) {
-  print('Id: ${user['Id']}');
-  //print('Image: ${user['Image']}');
-  print('-------------------------'); // Separator for clarity
-}
-    });
+userStream!.listen((QuerySnapshot snapshot) async {
+  // Convert snapshot data to a list of documents (mocked here as getAllUserResult.Data.data)
+  var getAllUserResult = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  
+  // Assuming getAllUserResult.Data.data is accessible in a similar way
+  for (var getAllUserList in getAllUserResult) {
+
+    // Create an instance of UserManagementItemModel with the formatted data
+    UserFieldsModel userModel = UserFieldsModel(
+      id: getAllUserList['Id'],
+      name: getAllUserList['Name'],
+      className: getAllUserList['Class'],
+      gender: getAllUserList['Gender'].toString(),
+      age: getAllUserList['Age'],
+      address: getAllUserList['Address'].toString(),
+      images: base64Decode(getAllUserList['Image'])
+    );
+
+    // Add the created model to the usersList
+    userModelObj.usersList.add(userModel);
+  }
+});
   } catch (e) {
     print("Error fetching users: $e");
   }
