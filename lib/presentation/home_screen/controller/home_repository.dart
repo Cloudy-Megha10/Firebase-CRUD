@@ -73,11 +73,7 @@ Future<CommonResponse<dynamic>> updateUserData(
     };
     print("id$id");
 
-    // // Adding data to Firebase Firestore (assuming "users" collection)
-    // await FirebaseFirestore.instance
-    //     .collection("Users")
-    //     .doc(id)
-    //     .update(userData);
+    // Adding data to Firebase Firestore (assuming "users" collection)
      await DatabaseMethods().updateUserData(id, userData).then((value) {
     // Once updated, refresh the user list to reflect the changes
     Fluttertoast.showToast(msg: 'Data Updated Successfully', textColor: Colors.green);
@@ -95,5 +91,4 @@ Future<CommonResponse<dynamic>> updateUserData(
     return CommonResponse.withoutData(false, "Failure: $e");
   }
 }
-
 }
