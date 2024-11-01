@@ -1,37 +1,26 @@
-// Pages with dynamic content
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:demo_app/core/utils/image_constant.dart';
 import 'package:demo_app/core/utils/size_utils.dart';
 import 'package:demo_app/firebase_database/database_methods.dart';
 import 'package:demo_app/presentation/home_screen/controller/home_controller.dart';
 import 'package:demo_app/presentation/home_screen/models/user_fields.dart';
+import 'package:demo_app/widgets/custom_button.dart';
 import 'package:demo_app/widgets/custom_image_view.dart';
+import 'package:demo_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:random_string/random_string.dart';
 
 class DashboardPage extends StatelessWidget {
   final HomeController controller = Get.put(HomeController()); // Initialize the controller
 
   Widget allUserDataList() {
     return  Obx(() {
-    if (controller
-                                              .userModelObj
-                                              .usersList.isEmpty) {
+    if (controller.userModelObj.usersList.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
 
     return ListView.builder(
-  itemCount: controller
-                                              .userModelObj
-                                              .usersList
-                                              .length,  // Use the length of users to avoid out-of-bounds errors
+  itemCount: controller.userModelObj.usersList.length,  // Use the length of users to avoid out-of-bounds errors
   itemBuilder: (context, index) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -49,12 +38,8 @@ class DashboardPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
     ClipOval(
-  child: 
-    Image.memory(controller
-                                                                .userModelObj
-                                                                .usersList[
-                                                                    index]
-                                                                .images,
+  child: CustomImageView(
+    imageBytes: controller.userModelObj.usersList[index].images,
         height: getSize(150),
         width: getSize(150),
         fit: BoxFit.cover,
@@ -65,7 +50,7 @@ class DashboardPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (var field in ['Name', 'Class', 'Gender', 'Age', 'Address'])
+                        for (var field in ['lbl_name'.tr, 'lbl_class'.tr, 'lbl_gender'.tr, 'lbl_age'.tr, 'lbl_address'.tr])
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 3.0),
                             child: RichText(
@@ -103,10 +88,13 @@ class DashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade100),
-                      onPressed: () async {
+                    child: 
+                    CustomButton(
+                      text: 'lbl_edit'.tr,
+                     shape: ButtonShape.RoundedBorder20,
+                     variant: ButtonVariant.FillLightPurple,
+                     fontStyle: ButtonFontStyle.PurpleSemiBold14,
+                      onTap: () async {
                         // Populate the form fields with user data
                         controller.nameController.text = controller
                                                                         .userModelObj
@@ -147,32 +135,23 @@ class DashboardPage extends StatelessWidget {
                                                                             index]
                                                                         .id);
                       },
-                      child: Text(
-                        'Edit',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple.shade700,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        // Call the delete method
-                        deleteUserData(context, controller
+                   Expanded(
+                  child:  CustomButton(
+                     text: "lbl_delete".tr,
+                      variant: ButtonVariant.FillDarkPurple,
+                      shape: ButtonShape.RoundedBorder20,
+                      fontStyle: ButtonFontStyle.WhiteSemiBold14,
+                      onTap: () async{  
+                       await deleteUserData(context, controller
                                                                         .userModelObj
                                                                         .usersList[
                                                                             index]
                                                                         .id);
-                      },
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      }
                       ),
-                    ),
                   ),
                 ],
               ),
@@ -202,7 +181,7 @@ Future deleteUserData(BuildContext context,String id) {
                     children: [
                       Expanded(
                         child: Text(
-                          'Are you sure ? Want to delete data ?',
+                          'lbl_want_delete'.tr,
                           style: TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
@@ -222,29 +201,19 @@ Future deleteUserData(BuildContext context,String id) {
                     height: 25.0,
                   ),
                   Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade700),
-                      onPressed: () async {
+                    child: CustomButton(
+                      text: "lbl_delete_user".tr,
+                      shape: ButtonShape.RoundedBorder20,
+                   variant: ButtonVariant.FillDarkPurple,
+                      onTap: () async {
                         await DatabaseMethods()
                             .deleteUserData(id)
                             .then((value) {
                           Navigator.pop(context);
                          Fluttertoast.showToast(msg: 
-                              'Data Deleted Successfully', textColor:  Colors.red);
+                              'lbl_data_deleted'.tr, textColor:  Colors.red);
                         });
                       },
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 25.0, vertical: 15.0),
-                        child: Text(
-                          'Delete User Data',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.white),
-                        ),
-                      ),
                     ),
                   ),
                 ],
@@ -270,7 +239,7 @@ Future deleteUserData(BuildContext context,String id) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Edit User Detail',
+                        'lbl_edit_user'.tr,
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
@@ -297,20 +266,7 @@ Future deleteUserData(BuildContext context,String id) {
                      clipBehavior: Clip.none,
                      fit: StackFit.expand,
                      children: [
-                        if (controller.imageFile.value?.path != null && controller.imageFile.value!.path.contains('assets/'))
-      ClipOval(
-        child: Image.asset(
-          controller.imageFile.value!.path, // Load the image as an asset
-          height: getSize(200),
-          width: getSize(200),
-          fit: BoxFit.cover, // Use BoxFit.cover to fill the oval without cutting off
-        ),
-      ),
-
-    SizedBox(height: 20), // Add spacing between images
-
     // Display file image if userData['Image'] is a valid file path
-    if (controller.imageFile.value?.path != null && !controller.imageFile.value!.path.contains('assets/'))
       ClipOval(
         child: CustomImageView(
           file: File(controller.imageFile.value!.path),
@@ -337,8 +293,8 @@ Future deleteUserData(BuildContext context,String id) {
             SizedBox(
               height: 5.0,
             ),
-                  const Text(
-                    'Name',
+                   Text(
+                    'lbl_name'.tr,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -347,22 +303,18 @@ Future deleteUserData(BuildContext context,String id) {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
+                    CustomTextFormField(
+                      focusNode: FocusNode(),
                       controller: controller.nameController,
-                      decoration: InputDecoration(border: InputBorder.none),
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
                     ),
-                  ),
                   const SizedBox(
                     height: 10.0,
                   ),
-                  const Text(
-                    'Class',
+                   Text(
+                    'lbl_class'.tr,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -371,22 +323,18 @@ Future deleteUserData(BuildContext context,String id) {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
+                  CustomTextFormField(
+                      focusNode: FocusNode(),
                       controller: controller.classController,
-                      decoration: InputDecoration(border: InputBorder.none),
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
                     ),
-                  ),
                    const SizedBox(
                     height: 10.0,
                   ),
-                  const Text(
-                    'Gender',
+                   Text(
+                    'lbl_gender'.tr,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -395,22 +343,18 @@ Future deleteUserData(BuildContext context,String id) {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
+                 CustomTextFormField(
+                      focusNode: FocusNode(),
                       controller: controller.genderController,
-                      decoration: InputDecoration(border: InputBorder.none),
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
                     ),
-                  ),
                   const SizedBox(
                     height: 10.0,
                   ),
-                  const Text(
-                    'Age',
+                   Text(
+                    'lbl_age'.tr,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -419,22 +363,18 @@ Future deleteUserData(BuildContext context,String id) {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
+                  CustomTextFormField(
+                      focusNode: FocusNode(),
                       controller: controller.ageController,
-                      decoration: InputDecoration(border: InputBorder.none),
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
                     ),
-                  ),
                    const SizedBox(
                     height: 10.0,
                   ),
-                  const Text(
-                    'Address',
+                   Text(
+                    'lbl_address'.tr,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -443,38 +383,25 @@ Future deleteUserData(BuildContext context,String id) {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
+                  CustomTextFormField(
+                      focusNode: FocusNode(),
                       controller: controller.addressController,
-                      decoration: InputDecoration(border: InputBorder.none),
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
                     ),
-                  ),
                   const SizedBox(
-                    height: 40.0,
+                    height: 30.0,
                   ),
                   Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade700),
-                      onPressed: () async {
+                    child: CustomButton(
+                      text: 'lbl_update_user'.tr,
+                      variant: ButtonVariant.FillDarkPurple,
+                      fontStyle: ButtonFontStyle.WhiteSemiBold14,
+                      shape: ButtonShape.RoundedBorder20,
+                      onTap: () async {
                         onTapUpdateUser(id);
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 25.0, vertical: 15.0),
-                        child: Text(
-                          'Update User',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.white),
-                        ),
-                      ),
                     ),
                   ),
                 ],

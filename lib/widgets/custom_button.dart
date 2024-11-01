@@ -88,11 +88,11 @@ class CustomButton extends StatelessWidget {
     return TextButton.styleFrom(
       fixedSize: Size(
         width ?? double.maxFinite,
-        height ?? getVerticalSize(40),
+        height ?? getVerticalSize(45),
       ),
-      padding: _setPadding(),
+      //padding: _setPadding(),
       backgroundColor: _setColor(),
-      side: _setTextButtonBorder(),
+      //side: _setTextButtonBorder(),
       shape: RoundedRectangleBorder(
         borderRadius: _setBorderRadius(),
       ),
@@ -104,7 +104,7 @@ class CustomButton extends StatelessWidget {
       case ButtonShape.RoundedBorder20:
         return BorderRadius.circular(
           getHorizontalSize(
-            14.00,
+            20.00,
           ),
         );
          default:
@@ -118,16 +118,16 @@ class CustomButton extends StatelessWidget {
 
   _setTextButtonBorder() {
     switch (variant) {
-      case ButtonVariant.FillDarkRed:
+      case ButtonVariant.FillLightPurple:
         return BorderSide(
-          color: ColorConstant.darkRed,
+          color: ColorConstant.lightPurple,
           width: getHorizontalSize(
             1.00,
           ),
         );
           default:
         return BorderSide(
-          color: ColorConstant.darkRed,
+          color: ColorConstant.black900,
           width: getHorizontalSize(
             1.00,
           ),
@@ -137,27 +137,38 @@ class CustomButton extends StatelessWidget {
 
   _setColor() {
     switch (variant) {
-      case ButtonVariant.FillDarkRed:
-        return ColorConstant.darkRed;
+      case ButtonVariant.FillLightPurple:
+        return ColorConstant.lightPurple;
+      case ButtonVariant.FillDarkPurple:
+        return ColorConstant.darkPurple;
            default:
-        return ColorConstant.darkRed;
+        return ColorConstant.black900;
     }
   }
 
   _setFontStyle() {
     switch (fontStyle) {
-      case ButtonFontStyle.PoppinsSemiBold14:
+      case ButtonFontStyle.WhiteSemiBold14:
         return TextStyle(
-          color: ColorConstant.black900,
+          color: ColorConstant.whiteA700,
           fontSize: getFontSize(
-            14,
+            18,
           ),
           fontFamily: 'Aller',
           fontWeight: FontWeight.w500,
         );
+      case ButtonFontStyle.PurpleSemiBold14:
+        return TextStyle(
+          color: ColorConstant.purpleShade,
+          fontSize: getFontSize(
+            18,
+          ),
+          fontFamily: 'Aller',
+          fontWeight: FontWeight.w900,
+        );
       default:
         return TextStyle(
-          color: ColorConstant.whiteA700,
+          color: ColorConstant.black900,
           fontSize: getFontSize(
             18,
           ),
@@ -188,8 +199,11 @@ class CustomButton extends StatelessWidget {
 }
 
 enum ButtonVariant {
-  FillDarkRed}
+  FillLightPurple,
+  FillDarkPurple                                 
+  }
 
   enum ButtonFontStyle {
-  PoppinsSemiBold14
+  WhiteSemiBold14,
+  PurpleSemiBold14
   }

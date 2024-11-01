@@ -1,9 +1,10 @@
 
 import 'package:demo_app/presentation/home_screen/controller/home_controller.dart';
 import 'package:demo_app/presentation/home_screen/wigets/add_new_user.dart';
+import 'package:demo_app/presentation/home_screen/wigets/build_bottom_nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'wigets/home_screen1.dart';
+import 'wigets/edit_delete_user.dart';
 
 class HomeScreen extends StatelessWidget {
     final HomeController controller = Get.put(HomeController()); // Initialize the controller
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.purple.shade700,
         title: Text(
-          'Firebase Operations',
+          "lbl_firebase_operations".tr,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -35,34 +36,34 @@ class HomeScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildBottomNavItem(
+                buildBottomNavItem(
                   icon: Icons.chat_bubble_outline,
-                  label: 'Chat',
+                  label: "lbl_chat".tr,
                   index: 0,
                   controller: controller,
                 ),
-                _buildBottomNavItem(
+                buildBottomNavItem(
                   icon: Icons.group_outlined,
-                  label: 'Members',
+                  label: 'lbl_members'.tr,
                   index: 1,
                   controller: controller,
                 ),
-                _buildBottomNavItem(
+                buildBottomNavItem(
                   icon: Icons.home_outlined,
-                  label: 'Home',
+                  label: 'lbl_home'.tr,
                   index: 2,
                   isSelected: true, // Highlighted item
                   controller: controller,
                 ),
-                _buildBottomNavItem(
+                buildBottomNavItem(
                   icon: Icons.folder,
-                  label: 'Resources',
+                  label: 'lbl_resource'.tr,
                   index: 3,
                   controller: controller,
                 ),
-                _buildBottomNavItem(
+                buildBottomNavItem(
                   icon: Icons.photo_outlined,
-                  label: 'Gallery',
+                  label: 'lbl_gallery'.tr,
                   index: 4,
                   controller: controller,
                 ),
@@ -72,58 +73,7 @@ class HomeScreen extends StatelessWidget {
     ));
   }
 
-Widget _buildBottomNavItem({
-  required IconData icon,
-  required String label,
-  required int index,
-  bool isSelected = false,
-  required HomeController controller,
-}) {
-  bool selected = controller.selectedIndex.value == index;
 
-  return GestureDetector(
-    onTap: () {
-      controller.updateIndex(index);
-    },
-    child: Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: selected ? Colors.purple.shade700 : Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: SizedBox(
-        width: 40, // Ensure this width is enough to avoid overflow
-        height: 40, // Ensure this height is enough to avoid overflow
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: selected ? Colors.white : Colors.black,
-              size: 24, // Adjust icon size to fit within the box
-            ),
-            SizedBox(height: 4), // Spacing between icon and label
-            Expanded(
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center, // Center the text
-                  style: TextStyle(
-                    color: selected ? Colors.white : Colors.black,
-                    fontSize: 9, // Adjust font size
-                  ),
-                  //overflow: TextOverflow.ellipsis, // Handle overflow
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
 
 Widget getSelectedPage() {
     switch (controller.selectedIndex.value) {

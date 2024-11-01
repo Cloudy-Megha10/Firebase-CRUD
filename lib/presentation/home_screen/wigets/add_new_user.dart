@@ -1,14 +1,12 @@
-import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:demo_app/core/utils/image_constant.dart';
 import 'package:demo_app/core/utils/size_utils.dart';
-import 'package:demo_app/firebase_database/database_methods.dart';
 import 'package:demo_app/presentation/home_screen/controller/home_controller.dart';
 import 'package:demo_app/widgets/custom_image_view.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:demo_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:random_string/random_string.dart';
 
@@ -20,8 +18,8 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple.shade700,
-        title: const Text(
-          'Add New User',
+        title: Text(
+          'lbl_add_new'.tr,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -78,8 +76,8 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
             SizedBox(
               height: 5.0,
             ),
-            const Text(
-              'Name',
+             Text(
+              'lbl_name'.tr,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -88,22 +86,18 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
             SizedBox(
               height: 5.0,
             ),
-            Container(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: TextField(
-                controller: controller.nameController,
-                decoration: InputDecoration(border: InputBorder.none),
-              ),
-            ),
+            CustomTextFormField(
+                      focusNode: FocusNode(),
+                      controller: controller.nameController,
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
+                    ),
             const SizedBox(
               height: 10.0,
             ),
-            const Text(
-              'Class',
+             Text(
+              'lbl_class'.tr,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -112,22 +106,18 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
             SizedBox(
               height: 5.0,
             ),
-            Container(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: TextField(
-                controller: controller.classController,
-                decoration: InputDecoration(border: InputBorder.none),
-              ),
-            ),
+           CustomTextFormField(
+                      focusNode: FocusNode(),
+                      controller: controller.classController,
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
+                    ),
             const SizedBox(
               height: 10.0,
             ),
-             const Text(
-              'Gender',
+              Text(
+              'lbl_gender'.tr,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -136,22 +126,18 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
             SizedBox(
               height: 5.0,
             ),
-            Container(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: TextField(
-                controller: controller.genderController,
-                decoration: InputDecoration(border: InputBorder.none),
-              ),
-            ),
+            CustomTextFormField(
+                      focusNode: FocusNode(),
+                      controller: controller.genderController,
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
+                    ),
             const SizedBox(
               height: 10.0,
             ),
-            const Text(
-              'Age',
+             Text(
+              'lbl_age'.tr,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -160,22 +146,18 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
             SizedBox(
               height: 5.0,
             ),
-            Container(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: TextField(
-                controller: controller.ageController,
-                decoration: InputDecoration(border: InputBorder.none),
-              ),
-            ),
+            CustomTextFormField(
+                      focusNode: FocusNode(),
+                      controller: controller.ageController,
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
+                    ),
             const SizedBox(
               height: 10.0,
             ),
-             const Text(
-              'Address',
+              Text(
+              'lbl_address'.tr,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -184,17 +166,13 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
             SizedBox(
               height: 5.0,
             ),
-          Container(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: TextField(
-                controller: controller.addressController,
-                decoration: InputDecoration(border: InputBorder.none),
-              ),
-            ),
+           CustomTextFormField(
+                      focusNode: FocusNode(),
+                      controller: controller.addressController,
+                      variant: TextFormFieldVariant.OutlineGray900,
+                      isObscureText: false,
+                      shape: TextFormFieldShape.RoundedBorder16,
+                    ),
             const SizedBox(
               height: 20.0,
             ),
@@ -210,7 +188,7 @@ final HomeController controller = Get.put(HomeController()); // Initialize the c
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
                   child: Text(
-                    'Add User',
+                    'lbl_add_user'.tr,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0, color: Colors.white),
                   ),
                 ),
