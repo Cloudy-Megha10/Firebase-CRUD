@@ -4,7 +4,8 @@ import '../core/utils/color_constant.dart';
 import '../core/utils/size_utils.dart';
 
 class CustomButton extends StatelessWidget {
-  CustomButton({this.height,
+  CustomButton(
+      {this.height,
       this.width,
       this.text,
       this.margin,
@@ -13,8 +14,7 @@ class CustomButton extends StatelessWidget {
       this.padding,
       this.shape,
       this.variant,
-      this.fontStyle
-  });
+      this.fontStyle});
 
   double? width;
 
@@ -99,7 +99,7 @@ class CustomButton extends StatelessWidget {
     );
   }
 
-   _setBorderRadius() {
+  _setBorderRadius() {
     switch (shape) {
       case ButtonShape.RoundedBorder20:
         return BorderRadius.circular(
@@ -107,7 +107,7 @@ class CustomButton extends StatelessWidget {
             20.00,
           ),
         );
-         default:
+      default:
         return BorderRadius.circular(
           getHorizontalSize(
             14.00,
@@ -125,7 +125,7 @@ class CustomButton extends StatelessWidget {
             1.00,
           ),
         );
-          default:
+      default:
         return BorderSide(
           color: ColorConstant.black900,
           width: getHorizontalSize(
@@ -141,7 +141,7 @@ class CustomButton extends StatelessWidget {
         return ColorConstant.lightPurple;
       case ButtonVariant.FillDarkPurple:
         return ColorConstant.darkPurple;
-           default:
+      default:
         return ColorConstant.black900;
     }
   }
@@ -178,32 +178,24 @@ class CustomButton extends StatelessWidget {
     }
   }
 
-
   _setPadding() {
     switch (padding) {
       case ButtonPadding.PaddingAll15:
         return getPadding(left: 5, top: 5, bottom: 5, right: 5);
-    default:
+      default:
         return getPadding(
           all: 15,
         );
     }
-
-  }}
-  enum ButtonPadding {
-  PaddingAll15
   }
+}
 
-  enum ButtonShape {
+enum ButtonPadding { PaddingAll15 }
+
+enum ButtonShape {
   RoundedBorder20,
 }
 
-enum ButtonVariant {
-  FillLightPurple,
-  FillDarkPurple                                 
-  }
+enum ButtonVariant { FillLightPurple, FillDarkPurple }
 
-  enum ButtonFontStyle {
-  WhiteSemiBold14,
-  PurpleSemiBold14
-  }
+enum ButtonFontStyle { WhiteSemiBold14, PurpleSemiBold14 }

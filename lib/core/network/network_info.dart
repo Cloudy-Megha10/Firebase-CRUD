@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:demo_app/core/utils/color_constant.dart';
@@ -16,7 +15,8 @@ class NetworkInfo extends GetxController {
   void onInit() {
     super.onInit();
     // Corrected StreamSubscription initialization
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       _updateConnectionStatus(result);
     });
   }
@@ -30,7 +30,8 @@ class NetworkInfo extends GetxController {
         ),
         isDismissible: false,
         duration: const Duration(days: 1),
-        backgroundColor: ColorConstant.darkRed, // Ensure this exists in your project
+        backgroundColor:
+            ColorConstant.darkRed, // Ensure this exists in your project
         icon: Icon(
           Icons.wifi_off,
           color: ColorConstant.whiteA700,

@@ -3,5 +3,5 @@ import 'package:get/get_navigation/get_navigation.dart';
 
 class AppLocalization extends Translations {
   @override
-  Map<String,Map<String,String>> get keys => {'en_US':enUs};
+  Map<String, Map<String, String>> get keys => {'en_US': enUs};
 }

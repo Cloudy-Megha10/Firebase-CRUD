@@ -5,79 +5,78 @@ import '../core/utils/color_constant.dart';
 import '../core/utils/size_utils.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  CustomTextFormField({
-    this.controller,
-    this.hintText,
-    this.labelText,
-    this.margin,
-    this.textInputType = TextInputType.text,
-    this.validator,
-    this.alignment,
-    this.width,
-    this.inputFormatters,
-    this.onTap,
-    this.readOnly = false,
-    this.focusNode,
-    this.fontStyle,
-    this.isObscureText,
-    this.textInputAction,
-    this.maxLines,
-    this.prefix,
-    this.prefixConstraints,
-    this.suffix,
-    this.suffixConstraints,
-    this.variant,
-    this.padding,
-    this.shape,
-    this.prefixText
-  });
-TextEditingController? controller;
+  CustomTextFormField(
+      {this.controller,
+      this.hintText,
+      this.labelText,
+      this.margin,
+      this.textInputType = TextInputType.text,
+      this.validator,
+      this.alignment,
+      this.width,
+      this.inputFormatters,
+      this.onTap,
+      this.readOnly = false,
+      this.focusNode,
+      this.fontStyle,
+      this.isObscureText,
+      this.textInputAction,
+      this.maxLines,
+      this.prefix,
+      this.prefixConstraints,
+      this.suffix,
+      this.suffixConstraints,
+      this.variant,
+      this.padding,
+      this.shape,
+      this.prefixText});
+  TextEditingController? controller;
 
-TextFormFieldPadding? padding;
+  TextFormFieldPadding? padding;
 
-TextInputAction? textInputAction;
+  TextInputAction? textInputAction;
 
-bool? isObscureText;
+  bool? isObscureText;
 
-FocusNode? focusNode;
+  FocusNode? focusNode;
 
-bool readOnly;
+  bool readOnly;
 
-Alignment? alignment;
+  Alignment? alignment;
 
-String? hintText;
+  String? hintText;
 
-String? labelText;
+  String? labelText;
 
-String? prefixText;
+  String? prefixText;
 
-double? width;
+  double? width;
 
-TextFormFieldVariant? variant;
+  TextFormFieldVariant? variant;
 
-EdgeInsetsGeometry? margin;
+  EdgeInsetsGeometry? margin;
 
-TextInputType? textInputType;
+  TextInputType? textInputType;
 
-FormFieldValidator<String>? validator;
+  FormFieldValidator<String>? validator;
 
-List<TextInputFormatter>? inputFormatters;
+  List<TextInputFormatter>? inputFormatters;
 
-VoidCallback? onTap;
+  VoidCallback? onTap;
 
-TextFormFieldFontStyle? fontStyle;
+  TextFormFieldFontStyle? fontStyle;
 
-BoxConstraints? prefixConstraints;
+  BoxConstraints? prefixConstraints;
 
-BoxConstraints? suffixConstraints;
+  BoxConstraints? suffixConstraints;
 
-TextFormFieldShape? shape;
+  TextFormFieldShape? shape;
 
-int? maxLines;
+  int? maxLines;
 
-Widget? prefix;
+  Widget? prefix;
 
-Widget? suffix;
+  Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +88,7 @@ Widget? suffix;
         : _buildTextFormFieldWidget();
   }
 
- _buildTextFormFieldWidget() {
+  _buildTextFormFieldWidget() {
     return Container(
       width: width ?? double.maxFinite,
       margin: margin,
@@ -142,7 +141,8 @@ Widget? suffix;
           top: 31,
           right: 16,
           bottom: 31,
-        );default:
+        );
+      default:
         return getPadding(
           left: 15,
           top: 17,
@@ -152,26 +152,24 @@ Widget? suffix;
     }
   }
 
-
   _setFillColor() {
-  switch (variant) {
-    case TextFormFieldVariant.OutlineGray900:
-      return Colors.transparent; // or any color you prefer
-    default:
-      return ColorConstant.lightGrey;
+    switch (variant) {
+      case TextFormFieldVariant.OutlineGray900:
+        return Colors.transparent; // or any color you prefer
+      default:
+        return ColorConstant.lightGrey;
+    }
   }
-}
 
-_setFilled() {
-  switch (variant) {
-    case TextFormFieldVariant.None:
-    case TextFormFieldVariant.OutlineGray900:
-      return false;
-    default:
-      return true;
+  _setFilled() {
+    switch (variant) {
+      case TextFormFieldVariant.None:
+      case TextFormFieldVariant.OutlineGray900:
+        return false;
+      default:
+        return true;
+    }
   }
-}
-
 
   _setBorderStyle() {
     switch (variant) {
@@ -208,9 +206,7 @@ _setFilled() {
     }
   }
 
-
-
- _setFontStyle() {
+  _setFontStyle() {
     switch (fontStyle) {
       case TextFormFieldFontStyle.Aller14:
         return TextStyle(
@@ -221,7 +217,7 @@ _setFilled() {
           fontFamily: 'Aller',
           fontWeight: FontWeight.w400,
         );
-        default:
+      default:
         return TextStyle(
           color: ColorConstant.black900,
           fontSize: getFontSize(
@@ -234,9 +230,7 @@ _setFilled() {
   }
 }
 
-enum TextFormFieldFontStyle {
-  Aller14
-}
+enum TextFormFieldFontStyle { Aller14 }
 
 enum TextFormFieldVariant {
   None,
@@ -244,8 +238,6 @@ enum TextFormFieldVariant {
   OutlineGray900,
 }
 
-enum TextFormFieldPadding {
-  PaddingT17
-}
+enum TextFormFieldPadding { PaddingT17 }
 
 enum TextFormFieldShape { RoundedBorder16, RoundedBorder20, CircleBorder12 }

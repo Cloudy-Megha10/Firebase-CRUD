@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DatabaseMethods{
+class DatabaseMethods {
   Future addUserData(Map<String, dynamic> userdata, String id) async {
     print("userdata $userdata id $id");
-    return await FirebaseFirestore.instance.collection('Users').doc(id).set(userdata);
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(id)
+        .set(userdata);
   }
 
   Future<Stream<QuerySnapshot>> getUserData() async {
@@ -12,11 +15,16 @@ class DatabaseMethods{
   }
 
   Future updateUserData(String id, Map<String, dynamic> updatedUserData) async {
-    return await FirebaseFirestore.instance.collection('Users').doc(id).update(updatedUserData);
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(id)
+        .update(updatedUserData);
   }
 
   Future deleteUserData(String id) async {
-    return await FirebaseFirestore.instance.collection('Users').doc(id).delete();
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(id)
+        .delete();
   }
-
 }
