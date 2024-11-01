@@ -8,15 +8,16 @@ import '../presentation/home_screen/home_screen.dart';
 class AppRoutes {
   static const String splashScreen = '/splash_screen';
   static const String homeScreen = '/home_screen';
-  static List<GetPage> pages =  [
-    GetPage(name: splashScreen, page: () => SplashScreen(),
-    bindings: [
-      SplashBinding(),
-    ],
-    ),  
-  GetPage(name: homeScreen, page: ()=> HomeScreen(),
-  bindings: [
-    HomeBinding(),
-  ]),
+  static List<GetPage> pages = [
+    GetPage(
+      name: splashScreen,
+      page: () => SplashScreen(),
+      bindings: [
+        SplashBinding(),
+      ],
+    ),
+    GetPage(name: homeScreen, page: () => HomeScreen(), bindings: [
+      HomeBinding(),
+    ]),
   ];
 }

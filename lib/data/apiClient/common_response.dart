@@ -1,6 +1,6 @@
 class CommonResponse<T> {
   late bool status;
-  late T? data;  // Marked as nullable since it might not always have data
+  late T? data; // Marked as nullable since it might not always have data
   late String message;
 
   // Constructor for response without data

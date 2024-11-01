@@ -22,7 +22,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -32,11 +31,10 @@ class MyApp extends StatelessWidget {
       locale: Get.deviceLocale, //for setting localization strings
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-       visualDensity: VisualDensity.standard,
-    ),
-    initialRoute: AppRoutes.splashScreen,
-    getPages: AppRoutes.pages,
+        visualDensity: VisualDensity.standard,
+      ),
+      initialRoute: AppRoutes.splashScreen,
+      getPages: AppRoutes.pages,
     );
   }
 }
-
