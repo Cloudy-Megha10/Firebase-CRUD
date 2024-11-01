@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,8 @@ class CustomImageView extends StatelessWidget {
 
   ///[file] is required parameter for fetching image file
   File? file;
+
+  Uint8List? imageBytes;
 
   double? height;
   double? width;
@@ -50,6 +53,7 @@ class CustomImageView extends StatelessWidget {
     this.border,
     this.isFadeInImage,
     this.placeHolder = 'assets/images/image_not_found.png',
+    this.imageBytes
   });
 
   @override
@@ -154,6 +158,14 @@ class CustomImageView extends StatelessWidget {
     } else if (imagePath != null && imagePath!.isNotEmpty) {
       return Image.asset(
         imagePath!,
+        height: height,
+        width: width,
+        fit: fit ?? BoxFit.cover,
+        color: color,
+      );
+    }else if (imageBytes != null && imageBytes!.isNotEmpty) {
+      return Image.memory(
+        imageBytes!,
         height: height,
         width: width,
         fit: fit ?? BoxFit.cover,

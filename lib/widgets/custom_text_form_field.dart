@@ -153,21 +153,25 @@ Widget? suffix;
   }
 
 
-  _setFilled() {
-    switch (variant) {
-      case TextFormFieldVariant.None:
-        return false;
-      default:
-        return true;
-    }
-  }
-
   _setFillColor() {
-    switch (variant) {
-      default:
-        return ColorConstant.lightGrey;
-    }
+  switch (variant) {
+    case TextFormFieldVariant.OutlineGray900:
+      return Colors.transparent; // or any color you prefer
+    default:
+      return ColorConstant.lightGrey;
   }
+}
+
+_setFilled() {
+  switch (variant) {
+    case TextFormFieldVariant.None:
+    case TextFormFieldVariant.OutlineGray900:
+      return false;
+    default:
+      return true;
+  }
+}
+
 
   _setBorderStyle() {
     switch (variant) {
@@ -176,7 +180,7 @@ Widget? suffix;
           borderRadius: _setOutlineBorderRadius(),
           borderSide: BorderSide(
             color: ColorConstant.black900,
-            width: 1,
+            width: 2,
           ),
         );
       default:
@@ -212,7 +216,7 @@ Widget? suffix;
         return TextStyle(
           color: ColorConstant.black900,
           fontSize: getFontSize(
-            14,
+            18,
           ),
           fontFamily: 'Aller',
           fontWeight: FontWeight.w400,
@@ -221,7 +225,7 @@ Widget? suffix;
         return TextStyle(
           color: ColorConstant.black900,
           fontSize: getFontSize(
-            14,
+            18,
           ),
           fontFamily: 'Aller',
           fontWeight: FontWeight.w400,
